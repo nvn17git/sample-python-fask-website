@@ -3,7 +3,8 @@
 name: CICD-Pipeline-ElasticBeanstalk
 
 env:
-  S3-BUCKET-PATH  : "python-app-artifacts/sample-python-flask-website-artifacts"
+  S3-BUCKET-NAME  : "python-app-artifacts"
+  S3-BUCKET-PATH  : "sample-python-flask-website-artifacts"
   EB-APP-NAME     : "eb-python-flask-website"
   EB-ENV-NAME     : "Ebpythonflaskwebsite-env"
   ARTIFACT-NAME   : "app-artifact.zip"
@@ -37,7 +38,7 @@ jobs:
           aws-region            : ${{ env.AWS-REGION }}
 
       - name: upload artifacts to s3 bucket
-        run: aws s3 cp ${{ env.ARTIFACT-NAME }} s3://${{ env.S3-BUCKET-PATH }}/
+        run: aws s3 cp ${{ env.ARTIFACT-NAME }} s3://${{ env.S3-BUCKET-NAME }}/${{ env.S3-BUCKET-PATH }}/
 
       - name: print message
         run:  echo "End of CI Pipeline"
@@ -59,7 +60,7 @@ jobs:
         run:  |
               aws elasticbeanstalk create-application-version \
               --application-name ${{ env.EB-APP-NAME }} \
-              --source-bundle S3Bucket="${{ env.S3-BUCKET-PATH }}",S3Key="${{ env.ARTIFACT-NAME }}" \
+              --source-bundle S3Bucket="${{ env.S3-BUCKET-NAME }}",S3Key="${{ env.S3-BUCKET-PATH }}\${{ env.ARTIFACT-NAME }}" \
               --version-label "ver-${{ github.sha }}" \
               --description "commitSHA-${{ github.sha }}"
 
