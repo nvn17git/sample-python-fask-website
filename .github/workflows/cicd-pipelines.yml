@@ -37,7 +37,7 @@ jobs:
           aws-region            : ${{ env.AWS-REGION }}
 
       - name: upload artifacts to s3 bucket
-        run: aws s3 cp ${{ env.ARTIFACT-NAME }} s3://{{ env.S3-BUCKET-PATH }}/
+        run: aws s3 cp ${{ env.ARTIFACT-NAME }} s3://${{ env.S3-BUCKET-PATH }}/
 
       - name: print message
         run: echo "End of CI Pipeline"
