@@ -40,6 +40,33 @@ jobs:
         run: aws s3 cp ${{ env.ARTIFACT-NAME }} s3://${{ env.S3-BUCKET-PATH }}/
 
       - name: print message
-        run: echo "End of CI Pipeline"
+        run:  echo "End of CI Pipeline"
 
+  deploy:
 
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id     : ${{ secrets.NAVSHA_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key : ${{ secrets.NAVSHA_AWS_SECRET_ACCESS_KEY }}
+          aws-region            : ${{ env.AWS-REGION }}
+
+      - name: create new ElasticBeanstalk version
+        run:  |
+              aws elasticbeanstalk create-application-version \
+              --application-name ${{ env.EB-APP-NAME }} \
+              --source-bundle S3Bucket="${{ env.S3-BUCKET-PATH }}", S3Key="${{ env.ARTIFACT-NAME }}" \
+              --version-label "ver-${{ github.sha }}" \
+              --description "commitSHA-${{ github.sha }}"
+
+      - name: deploy new app version
+        run:  |
+              aws elasticbeanstalk update-environment \
+              --environment-name ${{ env.EB-ENV-NAME }} \
+              --version-label "ver-${{ github.sha }}"
+
+      - name: print message
+        run:  echo "End of CD Pipeline"
