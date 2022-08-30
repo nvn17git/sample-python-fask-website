@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+
+    <style>
+        img {
+          display: block;
+          margin-left: auto;
+          margin-right: auto;
+        }
+        h1 {
+          text-align: center;
+        }
+        p {
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div><h1 style="background-color:slategray;" class="h1" >Python Flask Website</h1>
+        <p class="p">Hello, {{ name }}</p>
+    </div>
+    <img src="/static/breakdancing_together.gif" alt="Python is awesome!" class="center">
+    <script type="text/javascript" src="{{ url_for('static', filename='index.js')}}" ></script>
+    <h1 style="background-color:slategray;" class="h1" >~ naveen sharma</h1>
+</body>
+</html>
