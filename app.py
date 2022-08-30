@@ -1,4 +1,3 @@
-from cProfile import run
 #samle python flask webframe website
 from flask import Flask
 from views import views
