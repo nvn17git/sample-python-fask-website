@@ -1,6 +1,6 @@
 # CICD workflow for python flask website
 
-name: CICD-Pipeline-ElasticBeanstalk
+name: CD-Pipeline-Flask-Website
 
 env:
   S3-BUCKET-NAME  : "python-app-artifacts"
@@ -17,7 +17,8 @@ on:
       - master
 
 jobs:
-  build:
+
+  build-pipeline:
 
     runs-on: ubuntu-latest
 
@@ -41,9 +42,9 @@ jobs:
         run: aws s3 cp ${{ env.ARTIFACT-NAME }} s3://${{ env.S3-BUCKET-NAME }}/${{ env.S3-BUCKET-PATH }}/
 
       - name: print message
-        run:  echo "End of CI Pipeline"
-
-  deploy:
+        run:  echo "End of Build Pipeline"
+  
+  deploy-to-ElasticBeanstalk:
 
     runs-on: ubuntu-latest
     needs:  [build]
@@ -71,4 +72,13 @@ jobs:
               --version-label "ver-${{ github.sha }}"
 
       - name: print message
-        run:  echo "End of CD Pipeline"
+        run:  echo "End of ElasticBeanstalk Deploy Pipeline"
+
+  deploy-to-EC2-Instance:
+
+    runs-on: ubuntu-latest
+    needs:  [build]
+
+    steps:
+      - name: print message
+        run:  echo "End of EC2 Deploy Pipeline"
